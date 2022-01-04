@@ -1,0 +1,5 @@
+export const getUserType = 'get/user'
+export const getUserByIdType = 'getById/user'
+export const postUserType = 'post/user'
+export const putUserType = 'put/user'
+export const deleteUserType = 'delete/user'

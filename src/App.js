@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { MantineProvider } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals'
+import { NotificationsProvider } from '@mantine/notifications'
+import { useSelector } from 'react-redux'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { AppShell } from './components/AppShell'
+import { LoginPage } from './pages/auth/login'
+import { BannerPage } from './pages/banner'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+    const theme = useSelector(state => state.theme)
+
+    return (
+        <MantineProvider theme={{
+            colorScheme: theme.mode,
+            loader: 'bars'
+        }} withGlobalStyles>
+            <ModalsProvider>
+                <NotificationsProvider position='bottom-center'>
+                    <Routes>
+                        <Route path='/' element={<AppShell />}>
+                            <Route index />
+                            <Route path='/banner' element={<BannerPage />} />
+                        </Route>
+                        <Route path='/auth'>
+                            <Route index element={<Navigate to='./signin' />} />
+                            <Route path='signin' element={<LoginPage />} />
+                        </Route>
+                    </Routes>
+                </NotificationsProvider>
+            </ModalsProvider>
+        </MantineProvider>
+    )
 }
 
-export default App;
+export default App

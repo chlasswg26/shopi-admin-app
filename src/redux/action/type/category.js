@@ -1,0 +1,5 @@
+export const getCategoryType = 'get/category'
+export const getCategoryByIdType = 'getById/category'
+export const postCategoryType = 'post/category'
+export const putCategoryType = 'put/category'
+export const deleteCategoryType = 'delete/category'
