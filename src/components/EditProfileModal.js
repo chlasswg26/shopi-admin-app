@@ -147,10 +147,10 @@ const CustomEditProfileModalWithFormik = withFormik({
     enableReinitialize: true,
     validationSchema: profileModel,
     displayName: 'EditProfileModalForm',
-    mapPropsToValues: (values) => ({
-        name: values?.profile?.response?.name,
-        phone: values?.profile?.response?.phone,
-        store: values?.profile?.response?.store
+    mapPropsToValues: (props) => ({
+        name: props?.profile?.name,
+        phone: props?.profile?.phone,
+        store: props?.profile?.store
     }),
     handleSubmit: (values, { setSubmitting, props }) => {
         const data = {}
