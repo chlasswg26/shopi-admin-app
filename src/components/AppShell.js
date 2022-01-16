@@ -1,9 +1,9 @@
-import { Fragment, memo, useState, createRef, useMemo } from 'react'
+import { Fragment, memo, useState, createRef, useRef, useEffect } from 'react'
 import { AppShell as MantineAppShell, Text, Header, MediaQuery, Burger, Navbar, ScrollArea, Group, Box, Image, ThemeIcon, Title, SegmentedControl, Center, Divider, Avatar, Breadcrumbs, Anchor, UnstyledButton, Menu } from '@mantine/core'
 import { BiCarousel, BiCategoryAlt, BiHistory, BiMoon, BiSun } from 'react-icons/bi'
 import { GiSuitcase } from 'react-icons/gi'
 import { FiChevronRight } from 'react-icons/fi'
-import { useDocumentTitle, useShallowEffect } from '@mantine/hooks'
+import { useDocumentTitle } from '@mantine/hooks'
 import AppLogo from '../assets/images/logo.png'
 import { useSelector, shallowEqual as shallowEqualRedux, useDispatch } from 'react-redux'
 import { lightTheme, darkTheme } from '../redux/reducer/theme'
@@ -41,26 +41,28 @@ const segmentedControlData = [
 const CustomAppShell = () => {
     const [opened, setOpened] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
-    const { theme, profile } = useSelector(state => ({
+    const { theme, account: { profile, update } } = useSelector(state => ({
         theme: state.theme,
-        profile: state.account.profile
+        account: state.account
     }), shallowEqualRedux)
     const dispatch = useDispatch()
     const toggleTheme = (value) => value === 'dark' ? dispatch(darkTheme()) : dispatch(lightTheme())
     const editModalRef = createRef()
-    const location = useLocation()
+    const { pathname } = useLocation()
     const [breadcrumbItems, setBreadcrumbItems] = useState([])
-    const account = useMemo(() => profile, [profile])
+    const mounted = useRef()
+    const isUpdateFulfilled = update?.isFulfilled
+    const profileResponse = profile?.response
+    const [accountInfo, setAccountInfo] = useState({})
 
     useDocumentTitle(`${REACT_APP_NAME} - App`)
-    useShallowEffect(() => {
-        if (showEditModal === false) dispatch(accountProfileActionCreator())
 
-        if (location.pathname !== '/') {
+    useEffect(() => {
+        if (pathname !== '/') {
             setBreadcrumbItems([
                 { title: REACT_APP_NAME, href: '/' },
                 { title: 'DASHBOARD', href: '/' },
-                { title: location.pathname.replace('/', '').toUpperCase(), href: location.pathname }
+                { title: pathname.replace('/', '').toUpperCase(), href: pathname }
             ])
         } else {
             setBreadcrumbItems([
@@ -68,7 +70,25 @@ const CustomAppShell = () => {
                 { title: 'DASHBOARD', href: '/' }
             ])
         }
-    }, [location.pathname, showEditModal])
+
+        if (!Object.keys(profile).length) dispatch(accountProfileActionCreator())
+    }, [pathname, profile])
+
+    useEffect(() => {
+        if (!mounted.current) {
+            mounted.current = true
+        } else {
+            if (isUpdateFulfilled) dispatch(accountProfileActionCreator())
+        }
+    }, [isUpdateFulfilled])
+
+    useEffect(() => {
+        if (!mounted.current) {
+            mounted.current = true
+        } else {
+            if (profileResponse) setAccountInfo(profileResponse)
+        }
+    }, [profileResponse])
 
     return (
         <Fragment>
@@ -215,15 +235,15 @@ const CustomAppShell = () => {
                                         }
                                     })}>
                                     <Group>
-                                        <Avatar src={account?.response?.image} alt='User Avatar' radius="xl" />
+                                        <Avatar src={profile?.response?.image} alt='User Avatar' radius="xl" />
 
                                         <div style={{ flex: 1, width: '25%' }}>
                                             <Text size="sm" weight={500} lineClamp={2}>
-                                                {account?.response?.name}
+                                                {profile?.response?.name}
                                             </Text>
 
                                             <Text color="dimmed" size="xs" lineClamp={2}>
-                                                {account?.response?.email}
+                                                {profile?.response?.email}
                                             </Text>
                                         </div>
 
@@ -240,7 +260,7 @@ const CustomAppShell = () => {
                                     ref={editModalRef}
                                     isOpen={showEditModal}
                                     setIsOpen={setShowEditModal}
-                                    profile={profile}
+                                    profile={accountInfo}
                                     dispatchUpdateProfileAction={(values) => dispatch(accountUpdateActionCreator(values))}
                                 />
                             )}
