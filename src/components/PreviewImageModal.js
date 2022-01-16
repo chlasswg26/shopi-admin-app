@@ -1,14 +1,16 @@
 import { Anchor, Center, Image, Modal, useMantineTheme } from '@mantine/core'
 import { shallowEqual } from '@mantine/hooks'
-import { Fragment, memo } from 'react'
+import { forwardRef, Fragment, memo } from 'react'
 import { BsBoxArrowUpRight } from 'react-icons/bs'
 
-const CustomPreviewImageModal = ({ isOpen, setIsOpen, source }) => {
+const forwardedRef = forwardRef
+const CustomPreviewImageModal = forwardedRef(({ isOpen, setIsOpen, source }, ref) => {
     const theme = useMantineTheme()
 
     return (
         <Fragment>
             <Modal
+                itemRef={ref}
                 opened={isOpen}
                 transition='skew-up'
                 onClose={() => setIsOpen(false)}
@@ -41,6 +43,6 @@ const CustomPreviewImageModal = ({ isOpen, setIsOpen, source }) => {
             </Modal>
         </Fragment>
     )
-}
+})
 
 export const PreviewImageModal = memo(CustomPreviewImageModal, shallowEqual)

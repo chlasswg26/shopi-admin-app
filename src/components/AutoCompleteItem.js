@@ -1,10 +1,9 @@
 import { Avatar, Group, Text } from '@mantine/core'
 import { shallowEqual } from '@mantine/hooks'
-import { Fragment, memo, useRef } from 'react'
+import { forwardRef, Fragment, memo } from 'react'
 
-const CustomAutoCompleteItem = ({ description, value, image, ...others }) => {
-    const ref = useRef(null)
-
+const forwardedRef = forwardRef
+const CustomAutoCompleteItem = forwardedRef(({ description, value, image, ...others }, ref) => {
     return (
         <Fragment>
             <div ref={ref} {...others}>
@@ -21,6 +20,6 @@ const CustomAutoCompleteItem = ({ description, value, image, ...others }) => {
             </div>
         </Fragment>
     )
-}
+})
 
 export const AutoCompleteItem = memo(CustomAutoCompleteItem, shallowEqual)

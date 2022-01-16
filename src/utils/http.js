@@ -2,7 +2,12 @@ import axios from 'axios'
 import { Duration } from '@icholy/duration'
 import qs from 'qs'
 import { refreshTokenActionCreator } from '../redux/action/creator/auth'
-import { store } from '../redux/store'
+import { customHistory as history } from '../router/browserHistory'
+
+let store
+export const injectStore = _store => {
+    store = _store
+}
 
 const { REACT_APP_BACKEND_URL, REACT_APP_REQUEST_TIMEOUT } = process.env
 const axiosInstance = axios.create()
@@ -34,8 +39,9 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => {
         const token = response.data?.data?.token
+        const role = response.data?.data?.role
 
-        if (token) localStorage.setItem('@acc_token', token)
+        if (token && role === 'ADMIN') localStorage.setItem('@acc_token', token)
 
         return response
     },
@@ -50,6 +56,7 @@ axiosInstance.interceptors.response.use(
             ) && originalRequest.url.includes('/auth/refresh-token')
         ) {
             localStorage.clear()
+            history.replace('/auth/signin')
 
             return Promise.reject()
         }
@@ -57,8 +64,11 @@ axiosInstance.interceptors.response.use(
         if (
             !originalRequest.url.includes('/auth/refresh-token') &&
             error?.response?.status === 400 &&
-            error?.response?.data.data.message === 'jwt expired' &&
-            !originalRequest._retry
+            (
+                error?.response?.data.data.message === 'jwt expired' ||
+                error?.response?.data?.data?.message === 'Session not found'
+            ) &&
+            !originalRequest?._retry
         ) {
             try {
                 await store.dispatch(refreshTokenActionCreator())
@@ -91,7 +101,7 @@ const queryParams = (value = {}) => {
 }
 
 export const getProfile = async () => await axiosInstance.get(`${ACCOUNT_PATH}/profile`)
-export const updateProfile = async (data) => await axiosInstance.put(`${ACCOUNT_PATH}/update`, data)
+export const updateProfile = async (data = {}) => await axiosInstance.put(`${ACCOUNT_PATH}/update`, data)
 
 export const register = async (data = {}) => axiosInstance.post(`${AUTHENTICATION_PATH}/register`, data)
 export const login = async (data = {}) => await axiosInstance.post(`${AUTHENTICATION_PATH}/login`, data)
