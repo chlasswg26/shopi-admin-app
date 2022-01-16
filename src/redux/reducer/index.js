@@ -1,8 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import account from './account'
 import auth from './auth'
+import account from './account'
 import banner from './banner'
 import cart from './cart'
 import category from './category'
@@ -21,8 +21,8 @@ const customPersistTheme = {
 }
 
 const appReducer = combineReducers({
-    account,
     auth,
+    account,
     banner,
     cart: persistReducer(
         customPersistCart,
@@ -38,8 +38,9 @@ const appReducer = combineReducers({
     )
 })
 const rootReducer = (state, action) => {
-    if (action.type.startsWith('logout/auth')) {
+    if (action.type === 'logout/auth/fulfilled') {
         state = {}
+        localStorage.clear()
     }
 
     return appReducer(state, action)

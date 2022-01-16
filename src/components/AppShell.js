@@ -1,13 +1,16 @@
-import { Fragment, memo, useState } from 'react'
-import { AppShell as MantineAppShell, Text, Header, MediaQuery, Burger, Navbar, ScrollArea, Group, Box, Image, ThemeIcon, Title, SegmentedControl, Center, Divider, Avatar, Breadcrumbs, Anchor, UnstyledButton } from '@mantine/core'
+import { Fragment, memo, useState, createRef, useMemo } from 'react'
+import { AppShell as MantineAppShell, Text, Header, MediaQuery, Burger, Navbar, ScrollArea, Group, Box, Image, ThemeIcon, Title, SegmentedControl, Center, Divider, Avatar, Breadcrumbs, Anchor, UnstyledButton, Menu } from '@mantine/core'
 import { BiCarousel, BiCategoryAlt, BiHistory, BiMoon, BiSun } from 'react-icons/bi'
 import { GiSuitcase } from 'react-icons/gi'
 import { FiChevronRight } from 'react-icons/fi'
-import { useDocumentTitle } from '@mantine/hooks'
+import { useDocumentTitle, useShallowEffect } from '@mantine/hooks'
 import AppLogo from '../assets/images/logo.png'
 import { useSelector, shallowEqual as shallowEqualRedux, useDispatch } from 'react-redux'
 import { lightTheme, darkTheme } from '../redux/reducer/theme'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
+import { EditProfileModal } from './EditProfileModal'
+import { logoutActionCreator } from '../redux/action/creator/auth'
+import { accountProfileActionCreator, accountUpdateActionCreator } from '../redux/action/creator/account'
 
 const { REACT_APP_NAME } = process.env
 const segmentedControlData = [
@@ -37,23 +40,35 @@ const segmentedControlData = [
 
 const CustomAppShell = () => {
     const [opened, setOpened] = useState(false)
-    const theme = useSelector(state => state.theme, shallowEqualRedux)
+    const [showEditModal, setShowEditModal] = useState(false)
+    const { theme, profile } = useSelector(state => ({
+        theme: state.theme,
+        profile: state.account.profile
+    }), shallowEqualRedux)
     const dispatch = useDispatch()
     const toggleTheme = (value) => value === 'dark' ? dispatch(darkTheme()) : dispatch(lightTheme())
+    const editModalRef = createRef()
+    const location = useLocation()
+    const [breadcrumbItems, setBreadcrumbItems] = useState([])
+    const account = useMemo(() => profile, [profile])
 
     useDocumentTitle(`${REACT_APP_NAME} - App`)
+    useShallowEffect(() => {
+        if (showEditModal === false) dispatch(accountProfileActionCreator())
 
-    const items = [
-        { title: 'Mantine', href: 'https://mantine.dev' },
-        { title: 'Mantine hooks', href: 'https://mantine.dev/hooks/getting-started' },
-        { title: 'use-id', href: 'https://mantine.dev/hooks/use-id' }
-    ].map((item, index) => (
-        <Anchor href={item.href} key={index} style={{
-            textDecoration: 'none'
-        }}>
-            {item.title}
-        </Anchor>
-    ))
+        if (location.pathname !== '/') {
+            setBreadcrumbItems([
+                { title: REACT_APP_NAME, href: '/' },
+                { title: 'DASHBOARD', href: '/' },
+                { title: location.pathname.replace('/', '').toUpperCase(), href: location.pathname }
+            ])
+        } else {
+            setBreadcrumbItems([
+                { title: REACT_APP_NAME, href: '/' },
+                { title: 'DASHBOARD', href: '/' }
+            ])
+        }
+    }, [location.pathname, showEditModal])
 
     return (
         <Fragment>
@@ -102,9 +117,8 @@ const CustomAppShell = () => {
                                     </Group>
                                 </Box>
                                 <Box
-                                    component='a'
-                                    href='https://mantine.dev'
-                                    target='_blank'
+                                    component={Link}
+                                    to='/category'
                                     sx={(theme) => ({
                                         display: 'block',
                                         color: theme.colorScheme === 'dark' ? theme.colors.blue[4] : theme.colors.blue[7],
@@ -184,35 +198,52 @@ const CustomAppShell = () => {
 
                         <Navbar.Section>
                             <Divider mb='md' />
-                            <UnstyledButton
-                                mb='xs'
-                                sx={(theme) => ({
-                                    display: 'block',
-                                    width: '100%',
-                                    padding: theme.spacing.md,
-                                    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-                                    borderRadius: 20,
-                                    '&:hover': {
-                                        backgroundColor:
-                                            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[3]
-                                    }
-                                })}>
-                                <Group>
-                                    <Avatar src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=250&q=80' radius="xl" />
+                            <Menu style={{
+                                width: '100%'
+                            }} placement='center' shadow='xl' withArrow control={
+                                <UnstyledButton
+                                    mb='xs'
+                                    sx={(theme) => ({
+                                        display: 'block',
+                                        width: '100%',
+                                        padding: theme.spacing.md,
+                                        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+                                        borderRadius: 20,
+                                        '&:hover': {
+                                            backgroundColor:
+                                                theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[3]
+                                        }
+                                    })}>
+                                    <Group>
+                                        <Avatar src={account?.response?.image} alt='User Avatar' radius="xl" />
 
-                                    <div style={{ flex: 1, width: '25%' }}>
-                                        <Text size="sm" weight={500} lineClamp={2}>
-                                            Nama lengkap
-                                        </Text>
+                                        <div style={{ flex: 1, width: '25%' }}>
+                                            <Text size="sm" weight={500} lineClamp={2}>
+                                                {account?.response?.name}
+                                            </Text>
 
-                                        <Text color="dimmed" size="xs" lineClamp={2}>
-                                            lupa@gmail.com
-                                        </Text>
-                                    </div>
+                                            <Text color="dimmed" size="xs" lineClamp={2}>
+                                                {account?.response?.email}
+                                            </Text>
+                                        </div>
 
-                                    <FiChevronRight />
-                                </Group>
-                            </UnstyledButton>
+                                        <FiChevronRight />
+                                    </Group>
+                                </UnstyledButton>
+                            }>
+                                <Menu.Label>Choose an action</Menu.Label>
+                                <Menu.Item onClick={() => setShowEditModal(true)} color='indigo'>Edit Profile</Menu.Item>,
+                                <Menu.Item onClick={() => dispatch(logoutActionCreator())} color="red">Sign Out</Menu.Item>
+                            </Menu>
+                            {showEditModal && (
+                                <EditProfileModal
+                                    ref={editModalRef}
+                                    isOpen={showEditModal}
+                                    setIsOpen={setShowEditModal}
+                                    profile={profile}
+                                    dispatchUpdateProfileAction={(values) => dispatch(accountUpdateActionCreator(values))}
+                                />
+                            )}
                         </Navbar.Section>
                     </Navbar>
                 }
@@ -255,12 +286,15 @@ const CustomAppShell = () => {
                             />
                         </div>
                     </Header>
-                }
-                style={{
-                    width: '100%'
-                }}>
+                }>
                 <Breadcrumbs mb='3%'>
-                    {items}
+                    {breadcrumbItems.map((item, index) => (
+                        <Anchor href={item.href} key={index} style={{
+                            textDecoration: 'none'
+                        }}>
+                            {item.title}
+                        </Anchor>
+                    ))}
                 </Breadcrumbs>
                 <Outlet />
             </MantineAppShell>
