@@ -1,14 +1,14 @@
-import { Fragment, memo, useState, createRef, useRef, useEffect } from 'react'
+import { Fragment, memo, useState, createRef, useEffect } from 'react'
 import { AppShell as MantineAppShell, Text, Header, MediaQuery, Burger, Navbar, ScrollArea, Group, Box, Image, ThemeIcon, Title, SegmentedControl, Center, Divider, Avatar, Breadcrumbs, Anchor, UnstyledButton, Menu } from '@mantine/core'
 import { BiCarousel, BiCategoryAlt, BiHistory, BiMoon, BiSun } from 'react-icons/bi'
 import { GiSuitcase } from 'react-icons/gi'
 import { FiChevronRight } from 'react-icons/fi'
-import { useDocumentTitle } from '@mantine/hooks'
+import { useDidUpdate, useDocumentTitle } from '@mantine/hooks'
 import AppLogo from '../assets/images/logo.png'
 import { useSelector, shallowEqual as shallowEqualRedux, useDispatch } from 'react-redux'
 import { lightTheme, darkTheme } from '../redux/reducer/theme'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { EditProfileModal } from './EditProfileModal'
+import { EditProfileModal } from './modal/EditProfileModal'
 import { logoutActionCreator } from '../redux/action/creator/auth'
 import { accountProfileActionCreator, accountUpdateActionCreator } from '../redux/action/creator/account'
 
@@ -18,7 +18,7 @@ const segmentedControlData = [
         value: 'dark',
         label: (
             <Center>
-                <ThemeIcon variant='gradient' gradient={{ from: 'grape', to: 'violet', deg: 70 }} radius='lg'>
+                <ThemeIcon variant='gradient' gradient={{ from: 'cyan', to: 'grape' }} radius='lg'>
                     <BiMoon size='20' color='#131a3d' />
                 </ThemeIcon>
                 <Text ml={5}>Dark</Text>
@@ -29,8 +29,8 @@ const segmentedControlData = [
         value: 'light',
         label: (
             <Center>
-                <ThemeIcon variant='gradient' gradient={{ from: 'orange', to: 'yellow', deg: 70 }} radius='lg'>
-                    <BiSun size='20' color='#ffea05' />
+                <ThemeIcon variant='gradient' gradient={{ from: 'orange', to: 'yellow' }} radius='lg'>
+                    <BiSun size='20' color='#ffffff' />
                 </ThemeIcon>
                 <Text ml={5}>Light</Text>
             </Center>
@@ -50,7 +50,6 @@ const CustomAppShell = () => {
     const editModalRef = createRef()
     const { pathname } = useLocation()
     const [breadcrumbItems, setBreadcrumbItems] = useState([])
-    const mounted = useRef()
     const isUpdateFulfilled = update?.isFulfilled
     const profileResponse = profile?.response
     const [accountInfo, setAccountInfo] = useState({})
@@ -72,22 +71,14 @@ const CustomAppShell = () => {
         }
 
         if (!Object.keys(profile).length) dispatch(accountProfileActionCreator())
-    }, [pathname, profile])
+    }, [pathname])
 
-    useEffect(() => {
-        if (!mounted.current) {
-            mounted.current = true
-        } else {
-            if (isUpdateFulfilled) dispatch(accountProfileActionCreator())
-        }
+    useDidUpdate(() => {
+        if (isUpdateFulfilled) dispatch(accountProfileActionCreator())
     }, [isUpdateFulfilled])
 
-    useEffect(() => {
-        if (!mounted.current) {
-            mounted.current = true
-        } else {
-            if (profileResponse) setAccountInfo(profileResponse)
-        }
+    useDidUpdate(() => {
+        if (profileResponse) setAccountInfo(profileResponse)
     }, [profileResponse])
 
     return (
@@ -128,7 +119,7 @@ const CustomAppShell = () => {
                                         }
                                     })}>
                                     <Group spacing='sm'>
-                                        <ThemeIcon variant='gradient' gradient={{ from: 'orange', to: 'blue', deg: 60 }}>
+                                        <ThemeIcon variant='gradient' gradient={{ from: 'grape', to: 'dark' }}>
                                             <BiCarousel size='17' />
                                         </ThemeIcon>
                                         <Text weight={500}>
@@ -179,7 +170,7 @@ const CustomAppShell = () => {
                                         }
                                     })}>
                                     <Group spacing='sm'>
-                                        <ThemeIcon variant='gradient' gradient={{ from: 'dark', to: 'white', deg: 60 }}>
+                                        <ThemeIcon variant='gradient' gradient={{ from: 'dark', to: 'indigo', deg: 60 }}>
                                             <GiSuitcase size='17' />
                                         </ThemeIcon>
                                         <Text weight={500}>
@@ -205,7 +196,7 @@ const CustomAppShell = () => {
                                         }
                                     })}>
                                     <Group spacing='sm'>
-                                        <ThemeIcon variant='gradient' gradient={{ from: 'indigo', to: 'violet' }}>
+                                        <ThemeIcon variant='gradient' gradient={{ from: 'red', to: 'dark', deg: 35 }}>
                                             <BiHistory size='17' />
                                         </ThemeIcon>
                                         <Text weight={500}>
@@ -307,11 +298,15 @@ const CustomAppShell = () => {
                         </div>
                     </Header>
                 }>
-                <Breadcrumbs mb='3%'>
+                <Breadcrumbs mb='xl'>
                     {breadcrumbItems.map((item, index) => (
-                        <Anchor href={item.href} key={index} style={{
-                            textDecoration: 'none'
-                        }}>
+                        <Anchor
+                            key={index}
+                            component={Link}
+                            to={item.href}
+                            style={{
+                                textDecoration: 'none'
+                            }}>
                             {item.title}
                         </Anchor>
                     ))}

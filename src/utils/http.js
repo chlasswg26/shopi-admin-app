@@ -108,85 +108,31 @@ export const login = async (data = {}) => await axiosInstance.post(`${AUTHENTICA
 export const refreshToken = async () => await axiosInstance.get(`${AUTHENTICATION_PATH}/refresh-token`)
 export const logout = async () => await axiosInstance.delete(`${AUTHENTICATION_PATH}/logout`)
 
-export const getAllBanner = async (filter = {}) => await axiosInstance.get(BANNER_PATH, queryParams(filter))
+export const getAllBanner = async (filter = { limit: 100 }) => await axiosInstance.get(BANNER_PATH, queryParams(filter))
 export const getBannerById = async (id = '') => await axiosInstance.get(`${BANNER_PATH}/${id}`)
 export const postBanner = async (data = {}) => await axiosInstance.post(BANNER_PATH, data)
-export const putBanner = async (type = '', id = '', data = {}) => {
-    let axiosProcess = await axiosInstance.put(`${BANNER_PATH}/${id}`, data)
+export const putBanner = async (id = '', data = {}) => await axiosInstance.put(`${BANNER_PATH}/${id}`, data)
+export const deleteBanner = async (id = '') => await axiosInstance.delete(`${BANNER_PATH}/${id}`)
 
-    if (type) axiosProcess = await axiosInstance.put(`${BANNER_PATH}/${type}/${id}`, data)
-
-    return axiosProcess
-}
-export const deleteBanner = async (type = '', id = '') => {
-    let axiosProcess = await axiosInstance.delete(`${BANNER_PATH}/${id}`)
-
-    if (type) axiosProcess = await axiosInstance.delete(`${BANNER_PATH}/${type}/${id}`)
-
-    return axiosProcess
-}
-
-export const getAllCategory = async (filter = {}) => await axiosInstance.get(CATEGORY_PATH, queryParams(filter))
+export const getAllCategory = async (filter = { limit: 100 }) => await axiosInstance.get(CATEGORY_PATH, queryParams(filter))
 export const getCategoryById = async (id = '') => await axiosInstance.get(`${CATEGORY_PATH}/${id}`)
 export const postCategory = async (data = {}) => await axiosInstance.post(CATEGORY_PATH, data)
-export const putCategory = async (type = '', id = '', data = {}) => {
-    let axiosProcess = await axiosInstance.put(`${CATEGORY_PATH}/${id}`, data)
-
-    if (type) axiosProcess = await axiosInstance.put(`${CATEGORY_PATH}/${type}/${id}`, data)
-
-    return axiosProcess
-}
-export const deleteCategory = async (type = '', id = '') => {
-    let axiosProcess = await axiosInstance.delete(`${CATEGORY_PATH}/${id}`)
-
-    if (type) axiosProcess = await axiosInstance.delete(`${CATEGORY_PATH}/${type}/${id}`)
-
-    return axiosProcess
-}
+export const putCategory = async (id = '', data = {}) => await axiosInstance.put(`${CATEGORY_PATH}/${id}`, data)
+export const deleteCategory = async (id = '') => await axiosInstance.delete(`${CATEGORY_PATH}/${id}`)
 
 export const getAllProduct = async (filter = {}) => await axiosInstance.get(PRODUCT_PATH, queryParams(filter))
 export const getProductById = async (id = '') => await axiosInstance.get(`${PRODUCT_PATH}/${id}`)
 export const postProduct = async (data = {}) => await axiosInstance.post(PRODUCT_PATH, data)
-export const putProduct = async (type = '', id = '', data = {}) => {
-    let axiosProcess = await axiosInstance.put(`${PRODUCT_PATH}/${id}`, data)
+export const putProduct = async (id = '', data = {}) => await axiosInstance.put(`${PRODUCT_PATH}/${id}`, data)
+export const deleteProduct = async (id = '') => await axiosInstance.delete(`${PRODUCT_PATH}/${id}`)
 
-    if (type) axiosProcess = await axiosInstance.put(`${PRODUCT_PATH}/${type}/${id}`, data)
-
-    return axiosProcess
-}
-export const deleteProduct = async (type = '', id = '') => {
-    let axiosProcess = await axiosInstance.delete(`${PRODUCT_PATH}/${id}`)
-
-    if (type) axiosProcess = await axiosInstance.delete(`${PRODUCT_PATH}/${type}/${id}`)
-
-    return axiosProcess
-}
-
-export const getAllTransaction = async (filter = {}) => await axiosInstance.get(TRANSACTION_PATH, queryParams(filter))
+export const getAllTransaction = async (filter = { limit: 100 }) => await axiosInstance.get(TRANSACTION_PATH, queryParams(filter))
 export const getTransactionById = async (id = '') => await axiosInstance.get(`${TRANSACTION_PATH}/${id}`)
 export const postTransaction = async (data = {}) => await axiosInstance.post(TRANSACTION_PATH, data)
-export const putTransaction = async (type = '', id = '', data = {}) => {
-    let axiosProcess = await axiosInstance.put(`${TRANSACTION_PATH}/${id}`, data)
+export const putTransaction = async (id = '', data = {}) => await axiosInstance.put(`${TRANSACTION_PATH}/${id}`, data)
 
-    if (type) axiosProcess = await axiosInstance.put(`${TRANSACTION_PATH}/${type}/${id}`, data)
-
-    return axiosProcess
-}
-
-export const getAllUser = async (filter = {}) => await axiosInstance.get(USER_PATH, queryParams(filter))
+export const getAllUser = async (filter = { limit: 100 }) => await axiosInstance.get(USER_PATH, queryParams(filter))
 export const getUserById = async (id = '') => await axiosInstance.get(`${USER_PATH}/${id}`)
 export const postUser = async (data = {}) => await axiosInstance.post(USER_PATH, data)
-export const putUser = async (type = '', id = '', data = {}) => {
-    let axiosProcess = await axiosInstance.put(`${USER_PATH}/${id}`, data)
-
-    if (type) axiosProcess = await axiosInstance.put(`${USER_PATH}/${type}/${id}`, data)
-
-    return axiosProcess
-}
-export const deleteUser = async (type = '', id = '') => {
-    let axiosProcess = await axiosInstance.delete(`${USER_PATH}/${id}`)
-
-    if (type) axiosProcess = await axiosInstance.delete(`${USER_PATH}/${type}/${id}`)
-
-    return axiosProcess
-}
+export const putUser = async (id = '', data = {}) => await axiosInstance.put(`${USER_PATH}/${id}`, data)
+export const deleteUser = async (id = '') => await axiosInstance.delete(`${USER_PATH}/${id}`)

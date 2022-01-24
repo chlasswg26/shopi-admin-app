@@ -19,7 +19,7 @@ const CustomDialogBox = forwardedRef(({
                 padding={0}
                 transition='skew-up'
                 transitionDuration={500}
-                transitionTimingFunction="ease"
+                transitionTimingFunction='ease'
                 position={{
                     top: 20,
                     right: 20
