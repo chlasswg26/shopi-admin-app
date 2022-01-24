@@ -74,3 +74,29 @@ export const changePasswordModel = Yup.object().shape({
             )
         })
 })
+
+export const bannerModel = Yup.object().shape({
+    name: Yup
+        .string()
+        .label('Name')
+        .required('This field is required.'),
+    description: Yup
+        .string()
+        .label('Description')
+        .max(700, 'The maximum character length is 13'),
+    uri: Yup
+        .string()
+        .label('URI')
+        .nullable(true)
+})
+
+export const categoryModel = Yup.object().shape({
+    name: Yup
+        .string()
+        .label('Name')
+        .required('This field is required.'),
+    description: Yup
+        .string()
+        .label('Description')
+        .max(700, 'The maximum character length is 13')
+})

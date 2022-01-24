@@ -1,8 +1,8 @@
-import { Center, Table } from '@mantine/core'
+import { Center, Table, Input, Box, Button, NumberInput, Select } from '@mantine/core'
 import { shallowEqual } from '@mantine/hooks'
 import { Fragment, memo, useState } from 'react'
 import { useTable, useSortBy, useFilters, useGlobalFilter, usePagination, useAsyncDebounce } from 'react-table'
-import { FaSortDown, FaSortUp, FaSort } from 'react-icons/fa'
+import { FaSortDown, FaSortUp, FaSort, FaSearch } from 'react-icons/fa'
 
 const GlobalFilter = ({
     preGlobalFilteredRows,
@@ -16,36 +16,23 @@ const GlobalFilter = ({
     }, 200)
 
     return (
-        <span>
-            Search:{' '}
-            <input
-                value={value || ''}
-                onChange={e => {
-                    setValue(e.target.value)
-                    onChange(e.target.value)
-                }}
-                placeholder={`${count} records...`}
-                style={{
-                    fontSize: '1.1rem',
-                    border: '0'
-                }}
-            />
-        </span>
+        <Input
+            icon={<FaSearch size='20' />}
+            value={value || ''}
+            onChange={event => {
+                setValue(event.target.value)
+                onChange(event.target.value)
+            }}
+            variant='filled'
+            placeholder={`Search a data on ${count} results...`}
+        />
     )
 }
-const CustomTableData = ({
-    columns,
-    data,
-    // fetchData,
-    loading,
-    pageCount: controlledPageCount
-}) => {
+const CustomTableData = ({ columns, data }) => {
     const tableInstance = useTable({
         columns,
         data,
-        initialState: { pageIndex: 0 },
-        manualPagination: true,
-        pageCount: controlledPageCount
+        initialState: { pageIndex: 0 }
     },
     useFilters,
     useGlobalFilter,
@@ -59,33 +46,25 @@ const CustomTableData = ({
         prepareRow,
         state: {
             globalFilter,
-            // pageIndex,
+            pageIndex,
             pageSize
         },
         preGlobalFilteredRows,
         setGlobalFilter,
-        page
-        // canPreviousPage,
-        // canNextPage,
-        // pageOptions,
-        // pageCount,
-        // gotoPage,
-        // nextPage,
-        // previousPage,
-        // setPageSize
+        visibleColumns,
+        page,
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        pageCount,
+        gotoPage,
+        nextPage,
+        previousPage,
+        setPageSize
     } = tableInstance
-
-    // useEffect(() => {
-    //     fetchData({ pageIndex, pageSize })
-    // }, [fetchData, pageIndex, pageSize])
 
     return (
         <Fragment>
-            <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={globalFilter}
-                setGlobalFilter={setGlobalFilter}
-            />
             <Table {...getTableProps()} highlightOnHover>
                 <thead>
                     {headerGroups.map((header, headerIndex) => (
@@ -110,6 +89,17 @@ const CustomTableData = ({
                             ))}
                         </tr>
                     ))}
+                    <tr>
+                        <th colSpan={visibleColumns.length} style={{
+                            textAlign: 'left'
+                        }}>
+                            <GlobalFilter
+                                preGlobalFilteredRows={preGlobalFilteredRows}
+                                globalFilter={globalFilter}
+                                setGlobalFilter={setGlobalFilter}
+                            />
+                        </th>
+                    </tr>
                 </thead>
                 <tbody {...getTableBodyProps()}>
                     {page.map((row, rowIndex) => {
@@ -130,16 +120,6 @@ const CustomTableData = ({
                             </tr>
                         )
                     })}
-                    <tr>
-                        {loading ? (
-                            <td colSpan="10000">Loading...</td>
-                        ) : (
-                            <td colSpan="10000">
-                                Showing {page.length} of {controlledPageCount * pageSize}{' '}
-                                results
-                            </td>
-                        )}
-                    </tr>
                 </tbody>
                 <tfoot>
                     {footerGroups.map((footer, footerIndex) => (
@@ -166,6 +146,66 @@ const CustomTableData = ({
                     ))}
                 </tfoot>
             </Table>
+
+            <Center mt='xl'>
+                <Box>
+                    <Button variant='default' compact onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+                        {'<<'}
+                    </Button>{' '}
+                    <Button variant='default' compact onClick={() => previousPage()} disabled={!canPreviousPage}>
+                        {'<'}
+                    </Button>{' '}
+                    <Button variant='default' compact onClick={() => nextPage()} disabled={!canNextPage}>
+                        {'>'}
+                    </Button>{' '}
+                    <Button variant='default' compact onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                        {'>>'}
+                    </Button>
+                    <Box component='span' ml='xs'>
+                        Page{' '}
+                        <Box component='strong'>
+                            {pageIndex + 1} of {pageOptions.length}
+                        </Box>{' '}
+                    </Box>
+                </Box>
+                <Box
+                    component='span'
+                    ml='xs'
+                    style={{
+                        display: 'inline-flex'
+                    }}>
+                    | Go to page:{' '}
+                    <NumberInput
+                        defaultValue={pageIndex + 1}
+                        onChange={number => {
+                            const page = number ? Number(number) - 1 : 0
+                            gotoPage(page)
+                        }}
+                        ml='xs'
+                        size='xs'
+                        min={0}
+                        stepholddelay={500}
+                        stepholdinterval={100}
+                        noClampOnBlur
+                    />
+                </Box>{' '}
+                <Select
+                    size='xs'
+                    ml='xs'
+                    placeholder={`Show ${pageSize} records`}
+                    onChange={value => setPageSize(Number(value))}
+                    data={[
+                        { value: 10, label: 'Show 10 records' },
+                        { value: 20, label: 'Show 20 records' },
+                        { value: 30, label: 'Show 30 records' },
+                        { value: 40, label: 'Show 40 records' },
+                        { value: 50, label: 'Show 50 records' }
+                    ]}
+                    style={{
+                        display: 'inline-flex'
+                    }}
+                />
+            </Center>
         </Fragment>
     )
 }

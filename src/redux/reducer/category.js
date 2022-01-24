@@ -37,7 +37,7 @@ const categoryReducer = createReducer(initialState, (builder) => {
 
                 state[type[0]] = {
                     isFulfilled: true,
-                    response: action.type.startsWith('get/category') ? action.payload?.data : action.payload?.data?.data
+                    response: action.payload?.data?.data
                 }
             }
         )

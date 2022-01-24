@@ -1,13 +1,13 @@
 import { Button, Container, Input, Image, InputWrapper, Modal, useMantineTheme, Accordion, Grid, Col, ScrollArea, Center, LoadingOverlay, Text } from '@mantine/core'
-import { shallowEqual, useShallowEffect } from '@mantine/hooks'
+import { shallowEqual, useDidUpdate } from '@mantine/hooks'
 import { createRef, forwardRef, Fragment, memo, useState } from 'react'
-import { DropzoneImage } from './DropzoneImage'
+import { DropzoneImage } from '../DropzoneImage'
 import { PreviewImageModal } from './PreviewImageModal'
 import { FaRegEye } from 'react-icons/fa'
 import { ErrorMessage, withFormik } from 'formik'
-import { profileModel } from '../utils/schema'
+import { profileModel } from '../../utils/schema'
 import { useSelector, shallowEqual as shallowEqualRedux } from 'react-redux'
-import { createFormData } from '../utils/form-data'
+import { createFormData } from '../../utils/form-data'
 
 const forwardedRef = forwardRef
 const CustomEditProfileModalWithFormikProps = ({
@@ -23,7 +23,7 @@ const CustomEditProfileModalWithFormikProps = ({
     const previewImage = image[0]?.preview
     const { update } = useSelector(state => state.account, shallowEqualRedux)
 
-    useShallowEffect(() => setFieldValue('single', image[0], false), [image])
+    useDidUpdate(() => setFieldValue('single', image[0], false), [image])
 
     return (
         <Fragment>

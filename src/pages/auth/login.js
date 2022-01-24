@@ -1,5 +1,5 @@
 import { Button, Group, Box, Input, InputWrapper, Overlay, Paper, ScrollArea, Title, LoadingOverlay, useMantineTheme, PasswordInput } from '@mantine/core'
-import { shallowEqual, useShallowEffect } from '@mantine/hooks'
+import { shallowEqual, useDidUpdate } from '@mantine/hooks'
 import { ErrorMessage, withFormik } from 'formik'
 import { createRef, memo, useState } from 'react'
 import { signInModel } from '../../utils/schema'
@@ -20,7 +20,7 @@ const LoginWithFormikProps = ({
     const loginDialogRef = createRef()
     const unauthorizedDialogRef = createRef()
 
-    useShallowEffect(() => {
+    useDidUpdate(() => {
         if (auth.login?.isRejected) setShowLoginDialog(true)
         if (auth.login?.isFulfilled && auth.login?.response?.role !== 'ADMIN') setShowUnauthorizedDialog(true)
     }, [auth])
