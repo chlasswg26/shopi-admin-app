@@ -10,6 +10,7 @@ import { CategoryPage } from './pages/category'
 import { DialogBox } from './components/DialogBox'
 import { RequireAuth } from './router/requireAuth'
 import { UnnecessaryAuth } from './router/UnnecessaryAuth'
+import { UserPage } from './pages/user'
 
 const App = () => {
     const theme = useSelector(state => state.theme)
@@ -29,6 +30,7 @@ const App = () => {
                     }>
                         <Route index path='/banner' element={<BannerPage />} />
                         <Route path='/category' element={<CategoryPage />} />
+                        <Route path='/user' element={<UserPage />} />
                     </Route>
                     {['/auth', '/auth/signin'].map((page, pageIndex) => <Route key={pageIndex} path={page} element={
                         pageIndex === 0 ? <Navigate to={page[1]} replace /> : (

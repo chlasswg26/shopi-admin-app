@@ -15,21 +15,24 @@ const Category = () => {
         {
             Header: 'ID',
             accessor: 'id',
+            id: 'ID',
             Footer: 'ID'
         },
         {
             Header: 'Name',
             accessor: 'name',
+            id: 'Name',
             Footer: 'Name'
         },
         {
             Header: 'Description',
             accessor: 'description',
+            id: 'Description',
             Footer: 'Description'
         },
         {
             Header: 'Action',
-            id: 'action-expander',
+            id: 'Action',
             Cell: ({ row }) => {
                 const [showEditModal, setShowEditModal] = useState(false)
                 const editCategoryModalRef = createRef()
@@ -47,6 +50,7 @@ const Category = () => {
                             </Text>
                         ),
                         hideCloseButton: true,
+                        closeOnClickOutside: false,
                         labels: { confirm: 'Delete', cancel: 'No don\'t delete it' },
                         confirmProps: { color: 'red' },
                         onCancel: () => modals.closeModal(modalId),
@@ -82,6 +86,7 @@ const Category = () => {
         {
             Header: 'Last Update',
             accessor: 'updated_at',
+            id: 'Last Update',
             Footer: 'Last Update'
         }
     ], [])
@@ -104,6 +109,7 @@ const Category = () => {
     const categoryDialogRef = createRef()
     const mounted = useRef()
     const zoneName = moment().locale()
+    const tableData = useMemo(() => data, [data])
 
     useEffect(() => {
         if (!mounted.current) {
@@ -150,7 +156,7 @@ const Category = () => {
                 onClick={() => setShowAddModal(true)}>
                 Create New Category
             </Button>
-            <TableData columns={columns} data={data} />
+            <TableData columns={columns} data={tableData} />
             {showDialog && (
                 <DialogBox
                     ref={categoryDialogRef}

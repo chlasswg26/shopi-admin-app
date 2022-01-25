@@ -60,6 +60,7 @@ const Banner = () => {
                 </Text>
             ),
             hideCloseButton: true,
+            closeOnClickOutside: false,
             labels: { confirm: 'Delete', cancel: 'No don\'t delete it' },
             confirmProps: { color: 'red' },
             onCancel: () => modals.closeModal(modalId),

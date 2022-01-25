@@ -100,3 +100,24 @@ export const categoryModel = Yup.object().shape({
         .label('Description')
         .max(700, 'The maximum character length is 13')
 })
+
+export const userModel = Yup.object().shape({
+    name: Yup
+        .string()
+        .label('Name')
+        .required('This field is required.'),
+    email: Yup
+        .string()
+        .label('Email')
+        .required('This field is required.')
+        .email('Please enter a valid email address.'),
+    phone: Yup
+        .string()
+        .label('Phone number')
+        .min(11, 'The minimum character length is 11')
+        .max(13, 'The maximum character length is 13'),
+    store: Yup
+        .string()
+        .label('Store name')
+        .nullable(true)
+})

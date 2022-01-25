@@ -1,6 +1,6 @@
 import { Fragment, memo, useState, createRef, useEffect } from 'react'
 import { AppShell as MantineAppShell, Text, Header, MediaQuery, Burger, Navbar, ScrollArea, Group, Box, Image, ThemeIcon, Title, SegmentedControl, Center, Divider, Avatar, Breadcrumbs, Anchor, UnstyledButton, Menu } from '@mantine/core'
-import { BiCarousel, BiCategoryAlt, BiHistory, BiMoon, BiSun } from 'react-icons/bi'
+import { BiCarousel, BiCategoryAlt, BiHistory, BiMoon, BiSun, BiUser } from 'react-icons/bi'
 import { GiSuitcase } from 'react-icons/gi'
 import { FiChevronRight } from 'react-icons/fi'
 import { useDidUpdate, useDocumentTitle } from '@mantine/hooks'
@@ -204,6 +204,31 @@ const CustomAppShell = () => {
                                         </Text>
                                     </Group>
                                 </Box>
+                                <Box
+                                    component={Link}
+                                    to='/user'
+                                    sx={(theme) => ({
+                                        display: 'block',
+                                        color: theme.colorScheme === 'dark' ? theme.colors.blue[4] : theme.colors.blue[7],
+                                        textAlign: 'center',
+                                        padding: theme.spacing.xs,
+                                        borderRadius: theme.radius.md,
+                                        cursor: 'pointer',
+                                        textDecoration: 'none',
+                                        '&:hover': {
+                                            backgroundColor:
+                                                theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1]
+                                        }
+                                    })}>
+                                    <Group spacing='sm'>
+                                        <ThemeIcon variant='gradient' gradient={{ from: 'dark', to: 'gray', deg: 35 }}>
+                                            <BiUser size='17' />
+                                        </ThemeIcon>
+                                        <Text weight={500}>
+                                            User
+                                        </Text>
+                                    </Group>
+                                </Box>
                             </Group>
                         </Navbar.Section>
 
@@ -226,14 +251,14 @@ const CustomAppShell = () => {
                                         }
                                     })}>
                                     <Group>
-                                        <Avatar src={profile?.response?.image} alt='User Avatar' radius="xl" />
+                                        <Avatar src={profile?.response?.image} alt='User Avatar' radius='xl' />
 
                                         <div style={{ flex: 1, width: '25%' }}>
-                                            <Text size="sm" weight={500} lineClamp={2}>
+                                            <Text size='sm' weight={500} lineClamp={2}>
                                                 {profile?.response?.name}
                                             </Text>
 
-                                            <Text color="dimmed" size="xs" lineClamp={2}>
+                                            <Text color='dimmed' size='xs' lineClamp={2}>
                                                 {profile?.response?.email}
                                             </Text>
                                         </div>
@@ -244,7 +269,7 @@ const CustomAppShell = () => {
                             }>
                                 <Menu.Label>Choose an action</Menu.Label>
                                 <Menu.Item onClick={() => setShowEditModal(true)} color='indigo'>Edit Profile</Menu.Item>,
-                                <Menu.Item onClick={() => dispatch(logoutActionCreator())} color="red">Sign Out</Menu.Item>
+                                <Menu.Item onClick={() => dispatch(logoutActionCreator())} color='red'>Sign Out</Menu.Item>
                             </Menu>
                             {showEditModal && (
                                 <EditProfileModal
