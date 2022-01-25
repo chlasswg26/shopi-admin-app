@@ -21,9 +21,7 @@ const thunkAction = (action, api) => createAsyncThunk(action, async (data, {
     try {
         let request
 
-        if (action.startsWith('post/user')) request = await api(data?.value, data?.token)
-        if (action.startsWith('put/user')) request = await api(data?.type, data?.id, data?.value, data?.token)
-        if (action.startsWith('delete/user')) request = await api(data?.type, data?.id, data?.token)
+        if (action.startsWith('put/user')) request = await api(data?.id, data?.value)
 
         const response = request || await api(data)
 

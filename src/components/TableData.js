@@ -1,9 +1,22 @@
 import { Center, Table, Input, Box, Button, NumberInput, Select } from '@mantine/core'
 import { shallowEqual } from '@mantine/hooks'
-import { Fragment, memo, useState } from 'react'
+import { forwardRef, Fragment, memo, useEffect, useRef, useState } from 'react'
 import { useTable, useSortBy, useFilters, useGlobalFilter, usePagination, useAsyncDebounce } from 'react-table'
 import { FaSortDown, FaSortUp, FaSort, FaSearch } from 'react-icons/fa'
 
+const forwardedRef = forwardRef
+const IndeterminateCheckbox = forwardedRef(
+    ({ indeterminate, ...rest }, ref) => {
+        const defaultRef = useRef()
+        const resolvedRef = ref || defaultRef
+
+        useEffect(() => {
+            resolvedRef.current.indeterminate = indeterminate
+        }, [resolvedRef, indeterminate])
+
+        return <input type='checkbox' ref={resolvedRef} {...rest} />
+    }
+)
 const GlobalFilter = ({
     preGlobalFilteredRows,
     globalFilter,
@@ -44,6 +57,8 @@ const CustomTableData = ({ columns, data }) => {
         headerGroups,
         footerGroups,
         prepareRow,
+        allColumns,
+        getToggleHideAllColumnsProps,
         state: {
             globalFilter,
             pageIndex,
@@ -65,6 +80,21 @@ const CustomTableData = ({ columns, data }) => {
 
     return (
         <Fragment>
+            <div>
+                <div>
+                    <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
+                    All
+                </div>
+                {allColumns.map(column => (
+                    <div key={column.id}>
+                        <label>
+                            <input type='checkbox' {...column.getToggleHiddenProps()} />{' '}
+                            {column.id}
+                        </label>
+                    </div>
+                ))}
+                <br />
+            </div>
             <Table {...getTableProps()} highlightOnHover>
                 <thead>
                     {headerGroups.map((header, headerIndex) => (

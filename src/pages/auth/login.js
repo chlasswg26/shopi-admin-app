@@ -68,10 +68,10 @@ const LoginWithFormikProps = ({
                         </InputWrapper>
                         <PasswordInput
                             id='input-password'
-                            placeholder="Your Password"
-                            label="Password"
-                            description="Please enter your password account"
-                            variant="filled"
+                            placeholder='Your Password'
+                            label='Password'
+                            description='Please enter your password account'
+                            variant='filled'
                             disabled={auth.login?.isPending}
                             required
                             error={errors.password ? <ErrorMessage name='password' /> : ''}

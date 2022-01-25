@@ -37,7 +37,7 @@ const userReducer = createReducer(initialState, (builder) => {
 
                 state[type[0]] = {
                     isFulfilled: true,
-                    response: action.type.startsWith('get/user') ? action.payload?.data : action.payload?.data?.data
+                    response: action.payload?.data?.data
                 }
             }
         )
