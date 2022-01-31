@@ -1,22 +1,9 @@
-import { Center, Table, Input, Box, Button, NumberInput, Select } from '@mantine/core'
-import { shallowEqual } from '@mantine/hooks'
-import { forwardRef, Fragment, memo, useEffect, useRef, useState } from 'react'
+import { Center, Table, Input, Box, Button, NumberInput, Select, Checkbox } from '@mantine/core'
+import { shallowEqual, useListState } from '@mantine/hooks'
+import { Fragment, memo, useState } from 'react'
 import { useTable, useSortBy, useFilters, useGlobalFilter, usePagination, useAsyncDebounce } from 'react-table'
 import { FaSortDown, FaSortUp, FaSort, FaSearch } from 'react-icons/fa'
 
-const forwardedRef = forwardRef
-const IndeterminateCheckbox = forwardedRef(
-    ({ indeterminate, ...rest }, ref) => {
-        const defaultRef = useRef()
-        const resolvedRef = ref || defaultRef
-
-        useEffect(() => {
-            resolvedRef.current.indeterminate = indeterminate
-        }, [resolvedRef, indeterminate])
-
-        return <input type='checkbox' ref={resolvedRef} {...rest} />
-    }
-)
 const GlobalFilter = ({
     preGlobalFilteredRows,
     globalFilter,
@@ -77,24 +64,53 @@ const CustomTableData = ({ columns, data }) => {
         previousPage,
         setPageSize
     } = tableInstance
+    const [values, handlers] = useListState(allColumns.map((columnValue, columnId) => ({
+        ...columnValue,
+        key: columnId,
+        label: columnValue.id,
+        checked: false
+    })))
+    const items = values.map((value, index) => (
+        <Checkbox
+            color='indigo'
+            radius='xl'
+            size='xs'
+            ml='md'
+            label={value.label}
+            key={value.key}
+            checked={value.checked}
+            onChange={(event) => handlers.setItemProp(index, 'checked', event.currentTarget.checked)}
+            {...value.getToggleHiddenProps()}
+        />
+    ))
+    const allChecked = values.every((value) => value.checked)
+    const indeterminate = values.some((value) => value.checked) && !allChecked
 
     return (
         <Fragment>
-            <div>
-                <div>
-                    <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
-                    All
-                </div>
-                {allColumns.map(column => (
-                    <div key={column.id}>
-                        <label>
-                            <input type='checkbox' {...column.getToggleHiddenProps()} />{' '}
-                            {column.id}
-                        </label>
-                    </div>
-                ))}
-                <br />
-            </div>
+            <Center mb='md'>
+                <Checkbox
+                    checked={allChecked}
+                    indeterminate={indeterminate}
+                    label='Toggle All'
+                    color='indigo'
+                    radius='xl'
+                    size='xs'
+                    transitionDuration={300}
+                    onChange={() =>
+                        handlers.setState((current) =>
+                            current.map((value) => ({ ...value, checked: !allChecked }))
+                        )
+                    }
+                    style={{
+                        justifyContent: 'center'
+                    }}
+                    {...getToggleHideAllColumnsProps()}
+                />
+            </Center>
+            <Center mb='xl'>
+                {items}
+            </Center>
             <Table {...getTableProps()} highlightOnHover>
                 <thead>
                     {headerGroups.map((header, headerIndex) => (
@@ -211,9 +227,11 @@ const CustomTableData = ({ columns, data }) => {
                             const page = number ? Number(number) - 1 : 0
                             gotoPage(page)
                         }}
+                        variant='filled'
                         ml='xs'
                         size='xs'
-                        min={0}
+                        min={1}
+                        max={pageOptions.length}
                         stepholddelay={500}
                         stepholdinterval={100}
                         noClampOnBlur

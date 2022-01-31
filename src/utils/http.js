@@ -56,7 +56,7 @@ axiosInstance.interceptors.response.use(
             ) && originalRequest.url.includes('/auth/refresh-token')
         ) {
             localStorage.clear()
-            history.replace('/auth/signin')
+            history.replace('/auth')
 
             return Promise.reject()
         }

@@ -10,6 +10,7 @@ import { DialogBox } from '../components/DialogBox'
 import { AddBannerModal } from '../components/modal/AddBannerModal'
 import { useDispatch, useSelector, shallowEqual as shallowEqualRedux } from 'react-redux'
 import { getBannerActionCreator, postBannerActionCreator, putBannerActionCreator, deleteBannerActionCreator } from '../redux/action/creator/banner'
+import { decode } from 'html-entities'
 
 const Banner = () => {
     const theme = useMantineTheme()
@@ -94,7 +95,12 @@ const Banner = () => {
             mounted.current = true
         } else {
             if (getBannerResponse) {
-                setBanner(getBannerResponse)
+                setBanner(getBannerResponse.map(value => ({
+                    ...value,
+                    name: decode(value.name),
+                    description: decode(value.description),
+                    uri: decode(value.uri)
+                })))
                 setPages(Math.round(getBannerResponse.length / dataLimit))
             }
         }

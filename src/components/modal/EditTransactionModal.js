@@ -6,17 +6,17 @@ import { categoryModel } from '../../utils/schema'
 import { useSelector, shallowEqual as shallowEqualRedux } from 'react-redux'
 
 const forwardedRef = forwardRef
-const CustomAddCategoryModalWithFormikProps = ({
+const CustomEditCategoryModalWithFormikProps = ({
     errors,
     values,
     handleChange,
     handleSubmit
 }) => {
-    const { post } = useSelector(state => state.category, shallowEqualRedux)
+    const { put } = useSelector(state => state.category, shallowEqualRedux)
 
     return (
         <Fragment>
-            <LoadingOverlay visible={post?.isPending} />
+            <LoadingOverlay visible={put?.isPending} />
             <form onSubmit={handleSubmit}>
                 <InputWrapper
                     id='category-name-id'
@@ -32,7 +32,7 @@ const CustomAddCategoryModalWithFormikProps = ({
                         value={values.name}
                         name='name'
                         onChange={handleChange}
-                        disabled={post?.isPending}
+                        disabled={put?.isPending}
                     />
                 </InputWrapper>
                 <Textarea
@@ -43,7 +43,7 @@ const CustomAddCategoryModalWithFormikProps = ({
                     value={values.description}
                     name='description'
                     onChange={handleChange}
-                    disabled={post?.isPending}
+                    disabled={put?.isPending}
                     error={errors?.description ? <ErrorMessage name='description' /> : ''}
                     autosize
                     minRows={5}
@@ -53,7 +53,7 @@ const CustomAddCategoryModalWithFormikProps = ({
                     type='submit'
                     mt='xl'
                     fullWidth
-                    disabled={post?.isPending}
+                    disabled={put?.isPending}
                     color='indigo'>
                     Submit
                 </Button>
@@ -61,24 +61,29 @@ const CustomAddCategoryModalWithFormikProps = ({
         </Fragment>
     )
 }
-const CustomAddCategoryModalWithFormik = withFormik({
+const CustomEditCategoryModalWithFormik = withFormik({
+    enableReinitialize: true,
     validationSchema: categoryModel,
-    displayName: 'AddCategoryModalForm',
-    mapPropsToValues: () => ({
-        name: '',
-        description: ''
+    displayName: 'EditCategoryModalForm',
+    mapPropsToValues: (props) => ({
+        name: props?.category?.name,
+        description: props?.category?.description
     }),
     handleSubmit: (values, { setSubmitting, props }) => {
-        props.callback(values)
+        props.callback({
+            id: props?.category?.id,
+            value: values
+        })
         setSubmitting(false)
     },
     validateOnBlur: false,
     validateOnChange: true
-})(CustomAddCategoryModalWithFormikProps)
-const CustomAddCategoryModal = forwardedRef(({
+})(CustomEditCategoryModalWithFormikProps)
+const CustomEditCategoryModal = forwardedRef(({
     isOpen,
     setIsOpen,
-    dispatchPostCategoryAction
+    category,
+    dispatchPutCategoryAction
 }, ref) => {
     const theme = useMantineTheme()
 
@@ -88,14 +93,17 @@ const CustomAddCategoryModal = forwardedRef(({
             opened={isOpen}
             transition='skew-up'
             onClose={() => setIsOpen(false)}
-            title='Add Category'
+            title='Edit Category'
             overlayColor={theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2]}
             overlayOpacity={0.95}
             size='xl'
             closeOnClickOutside={false}>
-            <CustomAddCategoryModalWithFormik callback={(values) => dispatchPostCategoryAction(values)} />
+            <CustomEditCategoryModalWithFormik
+                callback={(values) => dispatchPutCategoryAction(values)}
+                category={category}
+            />
         </Modal>
     )
 })
 
-export const AddCategoryModal = memo(CustomAddCategoryModal, shallowEqual)
+export const EditTransactionModal = memo(CustomEditCategoryModal, shallowEqual)

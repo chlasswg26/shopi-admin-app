@@ -70,7 +70,7 @@ const CustomAppShell = () => {
             ])
         }
 
-        if (!Object.keys(profile).length) dispatch(accountProfileActionCreator())
+        if (!Object.keys(profile).length || profile?.errorMessage === 'Session not found') dispatch(accountProfileActionCreator())
     }, [pathname])
 
     useDidUpdate(() => {
@@ -153,9 +153,8 @@ const CustomAppShell = () => {
                                     </Group>
                                 </Box>
                                 <Box
-                                    component='a'
-                                    href='https://mantine.dev'
-                                    target='_blank'
+                                    component={Link}
+                                    to='/product'
                                     sx={(theme) => ({
                                         display: 'block',
                                         color: theme.colorScheme === 'dark' ? theme.colors.blue[4] : theme.colors.blue[7],
@@ -179,9 +178,8 @@ const CustomAppShell = () => {
                                     </Group>
                                 </Box>
                                 <Box
-                                    component='a'
-                                    href='https://mantine.dev'
-                                    target='_blank'
+                                    component={Link}
+                                    to='/transaction'
                                     sx={(theme) => ({
                                         display: 'block',
                                         color: theme.colorScheme === 'dark' ? theme.colors.blue[4] : theme.colors.blue[7],

@@ -10,6 +10,7 @@ import { EditUserModal } from '../components/modal/EditUserModal'
 import { useModals } from '@mantine/modals'
 import { DialogBox } from '../components/DialogBox'
 import { PreviewImageModal } from '../components/modal/PreviewImageModal'
+import { decode } from 'html-entities'
 
 const User = () => {
     const columns = useMemo(() => [
@@ -193,14 +194,8 @@ const User = () => {
         } else {
             if (getUserResponse) {
                 setData(getUserResponse.map(value => ({
-                    id: value.id,
-                    name: value.name,
-                    image: value.image,
-                    email: value.email,
-                    phone: value.phone,
-                    store: value.store,
-                    balance: value.balance,
-                    role: value.role,
+                    ...value,
+                    name: decode(value.name),
                     created_at: moment(value.created_at).locale(zoneName).format('LLLL'),
                     updated_at: moment(value.updated_at).locale(zoneName).format('LLLL')
                 })))
