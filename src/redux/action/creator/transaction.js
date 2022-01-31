@@ -19,8 +19,7 @@ const thunkAction = (action, api) => createAsyncThunk(action, async (data, {
     try {
         let request
 
-        if (action.startsWith('post/transaction')) request = await api(data?.value, data?.token)
-        if (action.startsWith('put/transaction')) request = await api(data?.type, data?.id, data?.value, data?.token)
+        if (action.startsWith('put/transaction')) request = await api(data?.id, data?.value)
 
         const response = request || await api(data)
 

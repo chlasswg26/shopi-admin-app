@@ -39,6 +39,7 @@ const CustomEditCategoryModalWithFormikProps = ({
                     label='Description'
                     id='input-category-description'
                     placeholder='Category description'
+                    variant='filled'
                     value={values.description}
                     name='description'
                     onChange={handleChange}

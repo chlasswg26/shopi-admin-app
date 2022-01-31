@@ -9,6 +9,7 @@ import moment from 'moment'
 import { EditCategoryModal } from '../components/modal/EditCategoryModal'
 import { useModals } from '@mantine/modals'
 import { DialogBox } from '../components/DialogBox'
+import { decode } from 'html-entities'
 
 const Category = () => {
     const columns = useMemo(() => [
@@ -33,7 +34,7 @@ const Category = () => {
         {
             Header: 'Action',
             id: 'Action',
-            Cell: ({ row }) => {
+            Cell: (props) => {
                 const [showEditModal, setShowEditModal] = useState(false)
                 const editCategoryModalRef = createRef()
                 const deleteDialogRef = createRef()
@@ -67,14 +68,14 @@ const Category = () => {
                         }>
                             <Menu.Label>Choose an action</Menu.Label>
                             <Menu.Item onClick={() => setShowEditModal(true)} color='indigo'>Edit</Menu.Item>,
-                            <Menu.Item onClick={() => openDeleteModal(row.values.id, row.values.name)} color='red'>Delete</Menu.Item>
+                            <Menu.Item onClick={() => openDeleteModal(props?.row?.original?.id, props?.row?.original?.name)} color='red'>Delete</Menu.Item>
                         </Menu>
                         {showEditModal && (
                             <EditCategoryModal
                                 ref={editCategoryModalRef}
                                 isOpen={showEditModal}
                                 setIsOpen={setShowEditModal}
-                                category={row.values}
+                                category={props?.row?.original}
                                 dispatchPutCategoryAction={(values) => dispatch(putCategoryActionCreator(values))}
                             />
                         )}
@@ -134,8 +135,8 @@ const Category = () => {
             if (getCategoryResponse) {
                 setData(getCategoryResponse.map(value => ({
                     id: value.id,
-                    name: value.name,
-                    description: value.description,
+                    name: decode(value.name),
+                    description: decode(value.description),
                     updated_at: moment(value.updated_at).locale(zoneName).format('LLLL')
                 })))
             }

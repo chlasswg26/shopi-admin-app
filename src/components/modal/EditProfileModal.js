@@ -41,7 +41,7 @@ const CustomEditProfileModalWithFormikProps = ({
                         id='input-profile-name'
                         placeholder='Profile name'
                         value={values.name}
-                        onChange={handleChange}
+                        onChange={handleChange('name')}
                         disabled={update?.isPending}
                     />
                 </InputWrapper>
@@ -60,7 +60,7 @@ const CustomEditProfileModalWithFormikProps = ({
                         id='input-profile-phone'
                         placeholder='Profile phone'
                         value={values.phone}
-                        onChange={handleChange}
+                        onChange={handleChange('phone')}
                         disabled={update?.isPending}
                     />
                 </InputWrapper>
@@ -78,7 +78,7 @@ const CustomEditProfileModalWithFormikProps = ({
                         id='input-profile-store'
                         placeholder='Profile store name'
                         value={values.store}
-                        onChange={handleChange}
+                        onChange={handleChange('store')}
                         disabled={update?.isPending}
                     />
                 </InputWrapper>

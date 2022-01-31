@@ -48,9 +48,10 @@ const CustomEditBannerModalWithFormikProps = ({
                     />
                 </InputWrapper>
                 <Textarea
-                    label="Description"
+                    label='Description'
                     id='input-banner-description'
-                    placeholder="Banner description"
+                    placeholder='Banner description'
+                    variant='filled'
                     value={values.description}
                     name='description'
                     onChange={handleChange}

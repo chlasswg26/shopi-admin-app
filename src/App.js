@@ -11,7 +11,10 @@ import { DialogBox } from './components/DialogBox'
 import { RequireAuth } from './router/requireAuth'
 import { UnnecessaryAuth } from './router/UnnecessaryAuth'
 import { UserPage } from './pages/user'
+import { TransactionPage } from './pages/transaction'
+import { ProductPage } from './pages/product'
 
+const authPath = ['/auth', '/auth/signin']
 const App = () => {
     const theme = useSelector(state => state.theme)
     const lostPageDialogRef = createRef()
@@ -30,15 +33,19 @@ const App = () => {
                     }>
                         <Route index path='/banner' element={<BannerPage />} />
                         <Route path='/category' element={<CategoryPage />} />
+                        <Route path='/product' element={<ProductPage />} />
+                        <Route path='/transaction' element={<TransactionPage />} />
                         <Route path='/user' element={<UserPage />} />
                     </Route>
-                    {['/auth', '/auth/signin'].map((page, pageIndex) => <Route key={pageIndex} path={page} element={
-                        pageIndex === 0 ? <Navigate to={page[1]} replace /> : (
-                            <UnnecessaryAuth>
-                                <LoginPage />
-                            </UnnecessaryAuth>
-                        )
-                    } />)}
+                    {authPath.map((page, pageIndex) => (
+                        <Route key={pageIndex} path={page} element={
+                            pageIndex === 0 ? <Navigate to={authPath[1]} replace /> : (
+                                <UnnecessaryAuth>
+                                    <LoginPage />
+                                </UnnecessaryAuth>
+                            )
+                        } />
+                    ))}
                     <Route path='*' element={
                         <Fragment>
                             <DialogBox

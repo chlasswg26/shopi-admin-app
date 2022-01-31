@@ -7,7 +7,7 @@ export const RequireAuth = ({ children }) => {
     const auth = useSelector(state => state.auth, shallowEqual)
 
     if ((auth.logout?.isFulfilled && !token) || !token) {
-        return <Navigate to='/auth/signin' state={{ from: location }} replace />
+        return <Navigate to='/auth' state={{ from: location }} replace />
     }
 
     return children
