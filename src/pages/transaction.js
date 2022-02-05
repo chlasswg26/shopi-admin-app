@@ -21,24 +21,28 @@ const Transaction = () => {
             Header: 'Customer',
             id: 'Customer',
             accessor: (props) => decode(props?.row?.original?.customer?.name),
+            Cell: (props) => decode(props?.row?.original?.customer?.name),
             Footer: 'Customer'
         },
         {
             Header: 'Seller',
             id: 'Seller',
             accessor: (props) => decode(props?.row?.original?.product?.seller?.name),
+            Cell: (props) => decode(props?.row?.original?.product?.seller?.name),
             Footer: 'Seller'
         },
         {
             Header: 'Product',
             id: 'Product',
             accessor: (props) => decode(props?.row?.original?.product?.name),
+            Cell: (props) => decode(props?.row?.original?.product?.name),
             Footer: 'Product'
         },
         {
             Header: 'Category',
             id: 'Category',
             accessor: (props) => decode(props?.row?.original?.product?.category?.name),
+            Cell: (props) => decode(props?.row?.original?.product?.category?.name),
             Footer: 'Category'
         },
         {
