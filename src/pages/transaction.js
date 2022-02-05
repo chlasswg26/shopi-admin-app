@@ -26,7 +26,7 @@ const Transaction = () => {
         {
             Header: 'Seller',
             id: 'Seller',
-            Cell: (props) => decode(props?.row?.original?.seller?.name),
+            Cell: (props) => decode(props?.row?.original?.product?.seller?.name),
             Footer: 'Seller'
         },
         {
@@ -38,7 +38,7 @@ const Transaction = () => {
         {
             Header: 'Category',
             id: 'Category',
-            Cell: (props) => decode(props?.row?.original?.category?.name),
+            Cell: (props) => decode(props?.row?.original?.product?.category?.name),
             Footer: 'Category'
         },
         {
@@ -118,7 +118,7 @@ const Transaction = () => {
     const getTransactionResponse = getTransaction?.response
     const isPutTransactionFulfilled = putTransaction?.isFulfilled
     const [showDialog, setShowDialog] = useState(false)
-    const categoryDialogRef = createRef()
+    const transactionDialogRef = createRef()
     const mounted = useRef()
     const zoneName = moment().locale()
     const tableData = useMemo(() => data, [data])
@@ -155,7 +155,7 @@ const Transaction = () => {
             <TableData columns={columns} data={tableData} />
             {showDialog && (
                 <DialogBox
-                    ref={categoryDialogRef}
+                    ref={transactionDialogRef}
                     isDialogOpen={showDialog}
                     onDialogClose={() => setShowDialog(false)}
                     status={

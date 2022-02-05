@@ -1,53 +1,106 @@
-import { Button, Input, InputWrapper, Modal, useMantineTheme, LoadingOverlay, Textarea } from '@mantine/core'
+import { Button, Input, InputWrapper, Modal, useMantineTheme, LoadingOverlay, Textarea, Select } from '@mantine/core'
 import { shallowEqual } from '@mantine/hooks'
 import { forwardRef, Fragment, memo } from 'react'
-import { ErrorMessage, withFormik } from 'formik'
-import { categoryModel } from '../../utils/schema'
+import { withFormik } from 'formik'
 import { useSelector, shallowEqual as shallowEqualRedux } from 'react-redux'
 
 const forwardedRef = forwardRef
-const CustomEditCategoryModalWithFormikProps = ({
+const CustomEditTransactionModalWithFormikProps = ({
     errors,
     values,
     handleChange,
-    handleSubmit
+    handleSubmit,
+    setFieldValue
 }) => {
-    const { put } = useSelector(state => state.category, shallowEqualRedux)
+    const { put } = useSelector(state => state.transaction, shallowEqualRedux)
 
     return (
         <Fragment>
             <LoadingOverlay visible={put?.isPending} />
             <form onSubmit={handleSubmit}>
-                <InputWrapper
-                    id='category-name-id'
-                    required
-                    label='Name'
-                    description='Please enter category name'
-                    style={{ width: '100%' }}
-                    error={<ErrorMessage name='name' />}>
+                <InputWrapper label='Customer' style={{ width: '100%' }}>
                     <Input
                         variant='filled'
-                        id='input-category-name'
-                        placeholder='Category name'
-                        value={values.name}
-                        name='name'
-                        onChange={handleChange}
-                        disabled={put?.isPending}
+                        value={values.transaction.customer.name}
+                        disabled={true}
+                    />
+                </InputWrapper>
+                <InputWrapper label='Seller' style={{ width: '100%' }}>
+                    <Input
+                        variant='filled'
+                        value={values.transaction.product.seller.name}
+                        disabled={true}
+                    />
+                </InputWrapper>
+                <InputWrapper label='Customer' style={{ width: '100%' }}>
+                    <Input
+                        variant='filled'
+                        value={values.transaction.customer.name}
+                        disabled={true}
+                    />
+                </InputWrapper>
+                <InputWrapper label='Product' style={{ width: '100%' }}>
+                    <Input
+                        variant='filled'
+                        value={values.transaction.product.name}
+                        disabled={true}
+                    />
+                </InputWrapper>
+                <InputWrapper label='Category' style={{ width: '100%' }}>
+                    <Input
+                        variant='filled'
+                        value={values.transaction.product.category.name}
+                        disabled={true}
+                    />
+                </InputWrapper>
+                <InputWrapper label='Price' style={{ width: '100%' }}>
+                    <Input
+                        variant='filled'
+                        value={values.transaction.price}
+                        disabled={true}
+                    />
+                </InputWrapper>
+                <InputWrapper label='Quantity' style={{ width: '100%' }}>
+                    <Input
+                        variant='filled'
+                        value={values.transaction.quantity}
+                        disabled={true}
                     />
                 </InputWrapper>
                 <Textarea
-                    label='Description'
-                    id='input-category-description'
-                    placeholder='Category description'
+                    label='Detail'
                     variant='filled'
-                    value={values.description}
-                    name='description'
-                    onChange={handleChange}
-                    disabled={put?.isPending}
-                    error={errors?.description ? <ErrorMessage name='description' /> : ''}
+                    value={values.transaction.detail}
                     autosize
+                    disabled={true}
                     minRows={5}
                     maxRows={10}
+                />
+                <Select
+                    label='Transaction Status'
+                    placeholder='Pick one'
+                    searchable
+                    nothingFound='No options'
+                    value={values.status}
+                    onChange={(value) => setFieldValue('status', value, false)}
+                    data={[
+                        {
+                            value: 'PENDING',
+                            label: 'PENDING'
+                        },
+                        {
+                            value: 'PACKED',
+                            label: 'PACKED'
+                        },
+                        {
+                            value: 'SENT',
+                            label: 'SENT'
+                        },
+                        {
+                            value: 'DELIVERED',
+                            label: 'DELIVERED'
+                        }
+                    ]}
                 />
                 <Button
                     type='submit'
@@ -61,29 +114,32 @@ const CustomEditCategoryModalWithFormikProps = ({
         </Fragment>
     )
 }
-const CustomEditCategoryModalWithFormik = withFormik({
+const CustomEditTransactionModalWithFormik = withFormik({
     enableReinitialize: true,
-    validationSchema: categoryModel,
-    displayName: 'EditCategoryModalForm',
+    displayName: 'EditTransactionModalForm',
     mapPropsToValues: (props) => ({
-        name: props?.category?.name,
-        description: props?.category?.description
+        status: props?.transaction?.status,
+        transaction: props?.transaction
     }),
     handleSubmit: (values, { setSubmitting, props }) => {
+        const data = {}
+
+        data.status = values?.status
+
         props.callback({
-            id: props?.category?.id,
-            value: values
+            id: props?.transaction?.id,
+            value: data
         })
         setSubmitting(false)
     },
     validateOnBlur: false,
-    validateOnChange: true
-})(CustomEditCategoryModalWithFormikProps)
-const CustomEditCategoryModal = forwardedRef(({
+    validateOnChange: false
+})(CustomEditTransactionModalWithFormikProps)
+const CustomEditTransactionModal = forwardedRef(({
     isOpen,
     setIsOpen,
-    category,
-    dispatchPutCategoryAction
+    transaction,
+    dispatchPutTransactionAction
 }, ref) => {
     const theme = useMantineTheme()
 
@@ -93,17 +149,17 @@ const CustomEditCategoryModal = forwardedRef(({
             opened={isOpen}
             transition='skew-up'
             onClose={() => setIsOpen(false)}
-            title='Edit Category'
+            title='Edit Transaction'
             overlayColor={theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2]}
             overlayOpacity={0.95}
             size='xl'
             closeOnClickOutside={false}>
-            <CustomEditCategoryModalWithFormik
-                callback={(values) => dispatchPutCategoryAction(values)}
-                category={category}
+            <CustomEditTransactionModalWithFormik
+                callback={(values) => dispatchPutTransactionAction(values)}
+                transaction={transaction}
             />
         </Modal>
     )
 })
 
-export const EditTransactionModal = memo(CustomEditCategoryModal, shallowEqual)
+export const EditTransactionModal = memo(CustomEditTransactionModal, shallowEqual)

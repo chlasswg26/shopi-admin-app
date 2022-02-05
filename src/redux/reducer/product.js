@@ -34,11 +34,16 @@ const productReducer = createReducer(initialState, (builder) => {
             (action) => action.type.endsWith('product/fulfilled'),
             (state, action) => {
                 const type = action.type.split('/')
-
-                state[type[0]] = {
+                let data = {
                     isFulfilled: true,
                     response: action.payload?.data?.data
                 }
+                data = action.type.startsWith('get/product') ? {
+                    ...data,
+                    pagination: action.payload?.data?.pagination
+                } : data
+
+                state[type[0]] = data
             }
         )
 })

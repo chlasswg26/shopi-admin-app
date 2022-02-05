@@ -4,7 +4,7 @@ export const createFormData = (files, data) => {
 
     if (single) formData.append('image', single)
 
-    if (multiple) for (const key in multiple) formData.append(key, multiple[key])
+    if (multiple) for (const key in multiple) formData.append('preview', multiple[key])
 
     if (data) for (const key in data) formData.append(key, data[key])
 
