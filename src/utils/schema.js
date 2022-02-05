@@ -121,3 +121,14 @@ export const userModel = Yup.object().shape({
         .label('Store name')
         .nullable(true)
 })
+
+export const productModel = Yup.object().shape({
+    name: Yup
+        .string()
+        .label('Name')
+        .required('This field is required.'),
+    description: Yup
+        .string()
+        .label('Description')
+        .required('This field is required.')
+})

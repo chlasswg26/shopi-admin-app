@@ -53,8 +53,9 @@ const CustomAppShell = () => {
     const isUpdateFulfilled = update?.isFulfilled
     const profileResponse = profile?.response
     const [accountInfo, setAccountInfo] = useState({})
+    const [documentTitle, setDocumentTitle] = useState('App')
 
-    useDocumentTitle(`${REACT_APP_NAME} - App`)
+    useDocumentTitle(`${REACT_APP_NAME} - ${documentTitle}`)
 
     useEffect(() => {
         if (pathname !== '/') {
@@ -63,6 +64,7 @@ const CustomAppShell = () => {
                 { title: 'DASHBOARD', href: '/' },
                 { title: pathname.replace('/', '').toUpperCase(), href: pathname }
             ])
+            setDocumentTitle(pathname.replace('/', '').toUpperCase())
         } else {
             setBreadcrumbItems([
                 { title: REACT_APP_NAME, href: '/' },
