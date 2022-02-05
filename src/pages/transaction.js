@@ -20,25 +20,25 @@ const Transaction = () => {
         {
             Header: 'Customer',
             id: 'Customer',
-            Cell: (props) => decode(props?.row?.original?.customer?.name),
+            accessor: (props) => decode(props?.row?.original?.customer?.name),
             Footer: 'Customer'
         },
         {
             Header: 'Seller',
             id: 'Seller',
-            Cell: (props) => decode(props?.row?.original?.product?.seller?.name),
+            accessor: (props) => decode(props?.row?.original?.product?.seller?.name),
             Footer: 'Seller'
         },
         {
             Header: 'Product',
             id: 'Product',
-            Cell: (props) => decode(props?.row?.original?.product?.name),
+            accessor: (props) => decode(props?.row?.original?.product?.name),
             Footer: 'Product'
         },
         {
             Header: 'Category',
             id: 'Category',
-            Cell: (props) => decode(props?.row?.original?.product?.category?.name),
+            accessor: (props) => decode(props?.row?.original?.product?.category?.name),
             Footer: 'Category'
         },
         {
