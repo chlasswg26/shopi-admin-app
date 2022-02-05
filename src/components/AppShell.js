@@ -70,6 +70,7 @@ const CustomAppShell = () => {
                 { title: REACT_APP_NAME, href: '/' },
                 { title: 'DASHBOARD', href: '/' }
             ])
+            setDocumentTitle('DASHBOARD')
         }
 
         if (!Object.keys(profile).length || profile?.errorMessage === 'Session not found') dispatch(accountProfileActionCreator())
@@ -309,18 +310,20 @@ const CustomAppShell = () => {
                                 </Title>
                             </Group>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                            <SegmentedControl
-                                data={segmentedControlData}
-                                size='sm'
-                                defaultValue={theme.mode}
-                                transitionDuration={500}
-                                transitionTimingFunction='linear'
-                                radius='lg'
-                                mr='xs'
-                                onChange={(value) => toggleTheme(value)}
-                            />
-                        </div>
+                        <MediaQuery smallerThan='sm' styles={{ display: 'none' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                                <SegmentedControl
+                                    data={segmentedControlData}
+                                    size='sm'
+                                    defaultValue={theme.mode}
+                                    transitionDuration={500}
+                                    transitionTimingFunction='linear'
+                                    radius='lg'
+                                    mr='xs'
+                                    onChange={(value) => toggleTheme(value)}
+                                />
+                            </div>
+                        </MediaQuery>
                     </Header>
                 }>
                 <Breadcrumbs mb='xl'>
