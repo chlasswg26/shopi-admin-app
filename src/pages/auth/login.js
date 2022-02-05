@@ -1,5 +1,5 @@
 import { Button, Group, Box, Input, InputWrapper, Overlay, Paper, ScrollArea, Title, LoadingOverlay, useMantineTheme, PasswordInput } from '@mantine/core'
-import { shallowEqual, useDidUpdate } from '@mantine/hooks'
+import { shallowEqual, useDidUpdate, useDocumentTitle } from '@mantine/hooks'
 import { ErrorMessage, withFormik } from 'formik'
 import { createRef, memo, useState } from 'react'
 import { signInModel } from '../../utils/schema'
@@ -7,6 +7,7 @@ import { useDispatch, useSelector, shallowEqual as shallowEqualRedux } from 'rea
 import { loginActionCreator } from '../../redux/action/creator/auth'
 import { DialogBox } from '../../components/DialogBox'
 
+const { REACT_APP_NAME } = process.env
 const LoginWithFormikProps = ({
     errors,
     values,
@@ -19,6 +20,8 @@ const LoginWithFormikProps = ({
     const [showUnauthorizedDialog, setShowUnauthorizedDialog] = useState(false)
     const loginDialogRef = createRef()
     const unauthorizedDialogRef = createRef()
+
+    useDocumentTitle(`${REACT_APP_NAME} - SIGN IN`)
 
     useDidUpdate(() => {
         if (auth.login?.isRejected) setShowLoginDialog(true)
