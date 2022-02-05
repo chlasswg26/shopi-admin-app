@@ -310,8 +310,8 @@ const CustomAppShell = () => {
                                 </Title>
                             </Group>
                         </div>
-                        <MediaQuery smallerThan='sm' styles={{ display: 'none' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                            <MediaQuery smallerThan='sm' styles={{ display: 'none' }}>
                                 <SegmentedControl
                                     data={segmentedControlData}
                                     size='sm'
@@ -322,8 +322,8 @@ const CustomAppShell = () => {
                                     mr='xs'
                                     onChange={(value) => toggleTheme(value)}
                                 />
-                            </div>
-                        </MediaQuery>
+                            </MediaQuery>
+                        </div>
                     </Header>
                 }>
                 <Breadcrumbs mb='xl'>
