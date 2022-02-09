@@ -95,7 +95,6 @@ const CustomAppShell = () => {
                         hiddenBreakpoint='xl'
                         hidden={!opened}
                         fixed
-                        position={{ top: 0, left: 0 }}
                         width={{ sm: 200, lg: 300 }}>
                         <Navbar.Section
                             grow

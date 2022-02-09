@@ -13,6 +13,7 @@ import { UnnecessaryAuth } from './router/UnnecessaryAuth'
 import { UserPage } from './pages/user'
 import { TransactionPage } from './pages/transaction'
 import { ProductPage } from './pages/product'
+import { DashboardChart } from './components/DashboardChart'
 
 const authPath = ['/auth', '/auth/signin']
 const App = () => {
@@ -31,7 +32,8 @@ const App = () => {
                             <AppShell />
                         </RequireAuth>
                     }>
-                        <Route index path='/banner' element={<BannerPage />} />
+                        <Route index element={<DashboardChart />} />
+                        <Route path='/banner' element={<BannerPage />} />
                         <Route path='/category' element={<CategoryPage />} />
                         <Route path='/product' element={<ProductPage />} />
                         <Route path='/transaction' element={<TransactionPage />} />

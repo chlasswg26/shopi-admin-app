@@ -38,7 +38,7 @@ const LoginWithFormikProps = ({
             <Overlay opacity={0.8} gradient={`${theme.colorScheme === 'dark' ? 'linear-gradient(105deg, #343A40 1%, #7048E8 60%, #343A40 95%)' : 'linear-gradient(105deg, #fff 1%, #7048E8 60%, #fff 95%)'}`} zIndex={-1} />
             <Paper component={ScrollArea} padding='xl' shadow='xl' radius='md' style={{
                 display: 'flex',
-                width: '55%',
+                width: theme.breakpoints.xs,
                 height: '70%'
             }}>
                 <LoadingOverlay visible={auth.login?.isPending} />
@@ -56,9 +56,7 @@ const LoginWithFormikProps = ({
                             label='E-Mail'
                             description='Please enter your e-mail account'
                             error={<ErrorMessage name='email' />}
-                            style={{
-                                width: '50%'
-                            }}>
+                            style={{ width: '70%' }}>
                             <Input
                                 type='email'
                                 variant='filled'
@@ -78,11 +76,9 @@ const LoginWithFormikProps = ({
                             disabled={auth.login?.isPending}
                             required
                             error={errors.password ? <ErrorMessage name='password' /> : ''}
-                            style={{
-                                width: '50%'
-                            }}
                             value={values.password}
                             onChange={handleChange('password')}
+                            style={{ width: '70%' }}
                         />
                         <Button
                             type='submit'
