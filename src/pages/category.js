@@ -1,5 +1,5 @@
-import { Box, Button, Center, LoadingOverlay, Menu, Text, useMantineTheme } from '@mantine/core'
-import { shallowEqual } from '@mantine/hooks'
+import { Box, Button, LoadingOverlay, Menu, Text, useMantineTheme } from '@mantine/core'
+import { shallowEqual, useMediaQuery } from '@mantine/hooks'
 import { createRef, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector, shallowEqual as shallowEqualRedux } from 'react-redux'
 import { TableData } from '../components/TableData'
@@ -12,6 +12,7 @@ import { DialogBox } from '../components/DialogBox'
 import { decode } from 'html-entities'
 
 const Category = () => {
+    const theme = useMantineTheme()
     const columns = useMemo(() => [
         {
             Header: 'ID',
@@ -58,9 +59,10 @@ const Category = () => {
                         onConfirm: () => dispatch(deleteCategoryActionCreator(categoryId))
                     })
                 }
+                const matches = useMediaQuery(`(min-width: ${theme.breakpoints.sm}px)`)
 
                 return (
-                    <Center>
+                    <Box style={{ display: 'flex', justifyContent: matches ? 'center' : 'flex-end' }}>
                         <Menu placement='center' shadow='lg' size='xl' withArrow control={
                             <Button radius='lg' variant='light' color='blue' fullWidth style={{ marginTop: 14 }}>
                                 Action
@@ -79,7 +81,7 @@ const Category = () => {
                                 dispatchPutCategoryAction={(values) => dispatch(putCategoryActionCreator(values))}
                             />
                         )}
-                    </Center>
+                    </Box>
                 )
             },
             Footer: 'Action'
@@ -103,7 +105,6 @@ const Category = () => {
     const isPostCategoryFulfilled = postCategory?.isFulfilled
     const isPutCategoryFulfilled = putCategory?.isFulfilled
     const isDeleteCategoryFulfilled = deleteCategory?.isFulfilled
-    const theme = useMantineTheme()
     const [showAddModal, setShowAddModal] = useState(false)
     const [showDialog, setShowDialog] = useState(false)
     const addCategoryModalRef = createRef()

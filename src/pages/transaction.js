@@ -1,4 +1,4 @@
-import { Box, Button, Center, LoadingOverlay, Menu } from '@mantine/core'
+import { Box, Button, LoadingOverlay, Menu } from '@mantine/core'
 import { shallowEqual } from '@mantine/hooks'
 import { createRef, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector, shallowEqual as shallowEqualRedux } from 'react-redux'
@@ -20,29 +20,25 @@ const Transaction = () => {
         {
             Header: 'Customer',
             id: 'Customer',
-            accessor: (props) => decode(props?.row?.original?.customer?.name),
-            Cell: (props) => decode(props?.row?.original?.customer?.name),
+            accessor: 'customer.name',
             Footer: 'Customer'
         },
         {
             Header: 'Seller',
             id: 'Seller',
-            accessor: (props) => decode(props?.row?.original?.product?.seller?.name),
-            Cell: (props) => decode(props?.row?.original?.product?.seller?.name),
+            accessor: 'product.seller.name',
             Footer: 'Seller'
         },
         {
             Header: 'Product',
             id: 'Product',
-            accessor: (props) => decode(props?.row?.original?.product?.name),
-            Cell: (props) => decode(props?.row?.original?.product?.name),
+            accessor: 'product.name',
             Footer: 'Product'
         },
         {
             Header: 'Category',
             id: 'Category',
-            accessor: (props) => decode(props?.row?.original?.product?.category?.name),
-            Cell: (props) => decode(props?.row?.original?.product?.category?.name),
+            accessor: 'product.category.name',
             Footer: 'Category'
         },
         {
@@ -77,7 +73,7 @@ const Transaction = () => {
                 const editTransactionModalRef = createRef()
 
                 return (
-                    <Center>
+                    <Box>
                         <Menu placement='center' shadow='lg' size='xl' withArrow control={
                             <Button radius='lg' variant='light' color='blue' fullWidth style={{ marginTop: 14 }}>
                                 Action
@@ -95,7 +91,7 @@ const Transaction = () => {
                                 dispatchPutTransactionAction={(values) => dispatch(putTransactionActionCreator(values))}
                             />
                         )}
-                    </Center>
+                    </Box>
                 )
             },
             Footer: 'Action'
@@ -146,6 +142,22 @@ const Transaction = () => {
             if (getTransactionResponse) {
                 setData(getTransactionResponse.map(value => ({
                     ...value,
+                    customer: {
+                        ...value.customer,
+                        name: decode(value.customer.name)
+                    },
+                    product: {
+                        ...value.product,
+                        name: decode(value.product.name),
+                        seller: {
+                            ...value.product.seller,
+                            name: decode(value.product.seller.name)
+                        },
+                        category: {
+                            ...value.product.category,
+                            name: decode(value.product.category.name)
+                        }
+                    },
                     created_at: moment(value.created_at).locale(zoneName).format('LLLL'),
                     updated_at: moment(value.updated_at).locale(zoneName).format('LLLL')
                 })))
