@@ -33,12 +33,12 @@ const CustomDashboardChart = () => {
     const [dataSets, setDataSets] = useState([])
     const transactionsResponse = transactions.get?.response
     const zoneName = moment().locale()
-    // const convertToRupiah = (number = 0) => {
-    //     return new Intl.NumberFormat('id-ID', {
-    //         style: 'currency',
-    //         currency: 'IDR'
-    //     }).format(number).replace(/^(\D+)/, '$1 ')
-    // }
+    const convertToRupiah = (number = 0) => {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR'
+        }).format(number).replace(/^(\D+)/, '$1 ')
+    }
 
     useEffect(() => {
         dispatch(getTransactionActionCreator())
@@ -71,6 +71,20 @@ const CustomDashboardChart = () => {
                         title: {
                             display: true,
                             text: 'Transactions Line Chart - Per Date'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    let label = context.dataset.label || ''
+
+                                    if (label) label += ': '
+
+                                    if (context.parsed.y !== null) label += convertToRupiah(context.parsed.y)
+
+                                    return label
+                                }
+                            }
+
                         }
                     },
                     scales: {
