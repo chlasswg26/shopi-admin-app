@@ -49,6 +49,8 @@ const Banner = () => {
         data: []
     })
 
+    console.log(pages, currentPage)
+
     const openDeleteModal = (bannerId, bannerName) => {
         const modalId = modals.openConfirmModal({
             itemRef: deleteDialogRef,
@@ -101,7 +103,7 @@ const Banner = () => {
                     description: decode(value.description),
                     uri: decode(value.uri)
                 })))
-                setPages(Math.round(getBannerResponse.length / dataLimit))
+                setPages(Math.ceil(getBannerResponse.length / dataLimit))
             }
         }
     }, [getBannerResponse])
