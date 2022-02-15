@@ -2,13 +2,17 @@
   "name": "shopi-admin-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/chlasswg26/shopi-admin-app#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chlasswg26/shopi-admin-app.git"
   },
   "bugs": {
     "url": "https://github.com/chlasswg26/shopi-admin-app/issues"
+  },
+  "engines": {
+    "yarn": ">=1.22.15",
+    "npm": ">=8.1.0",
+    "node": ">=14.x"
   },
   "dependencies": {
     "@icholy/duration": "^5.1.0",
