@@ -10,11 +10,6 @@
   "bugs": {
     "url": "https://github.com/chlasswg26/shopi-admin-app/issues"
   },
-  "engines": {
-    "yarn": ">=1.22.15",
-    "npm": ">=8.1.0",
-    "node": ">=14.x"
-  },
   "dependencies": {
     "@icholy/duration": "^5.1.0",
     "@mantine/core": "^3.4.3",
