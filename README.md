@@ -27,23 +27,69 @@
 - npm >=8.1.0
 - node >=16.11.1
 
-## Install
+***INSTALL***
 
 ```sh
 yarn install
 ```
 
+OR
+
+```sh
+npm install
+```
+
+
+
+## Setup
+
+> Create new files called '.env' or rename env.example to '.env'
+
+
+| Environment | Value | Description |
+| :---------: | :---: | :---------: |
+|      REACT_APP_NAME      | Shopi | App name |
+|      REACT_APP_DESCRIPTION      | Just simply admin panel | App descriptions |
+|      REACT_APP_BACKEND_URL      | https://api-shopi.up.railway.app/api/v1 | Backend Endpoint URL |
+|      REACT_APP_REQUEST_TIMEOUT      | 100s | App request timeout |
+
+
+
 ## Usage
 
-```sh
-yarn run start
-```
-
-## Run tests
+***Production***
 
 ```sh
-yarn run test
+yarn build
 ```
+
+***Development***
+
+```sh
+yarn start
+```
+
+OR
+
+***Production***
+
+```sh
+npm build
+```
+
+***Development***
+
+```sh
+npm start
+
+```
+
+
+
+## To Do
+
+- [ ] Unit test
+
 
 ## Dependencies
 

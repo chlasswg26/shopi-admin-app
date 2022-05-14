@@ -70,14 +70,12 @@ const CustomEditUserModalWithFormikProps = ({
                     description='Please enter your password account'
                     variant='filled'
                     disabled={put?.isPending}
-                    required
                     error={errors.password ? <ErrorMessage name='password' /> : ''}
                     value={values.password}
                     onChange={handleChange('password')}
                 />
                 <InputWrapper
                     id='user-phone-id'
-                    required
                     label='Phone'
                     description='Please enter user phone'
                     style={{
@@ -96,7 +94,6 @@ const CustomEditUserModalWithFormikProps = ({
                 </InputWrapper>
                 <InputWrapper
                     id='user-store-id'
-                    required
                     label='Store'
                     description='Please enter user store name'
                     style={{
@@ -114,7 +111,6 @@ const CustomEditUserModalWithFormikProps = ({
                 </InputWrapper>
                 <InputWrapper
                     id='user-balance-id'
-                    required
                     label='Balance'
                     description='Please enter user balance'
                     style={{
@@ -228,7 +224,7 @@ const CustomEditUserModalWithFormik = withFormik({
         data.email = values?.email
         data.phone = values?.phone
         data.store = values?.store
-        data.balance = values?.balance
+        data.balance = parseInt(values?.balance)
         data.role = values?.role.toUpperCase()
         image.single = values?.single
 
